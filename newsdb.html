@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>중학생 신문사설 탐색 시스템</title>
+    <style>
+        body { font-family: 'Pretendard', sans-serif; background-color: #f0f4f8; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 40px; border-radius: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        h1 { text-align: center; color: #2c3e50; font-size: 2rem; }
+        .guide-text { text-align: center; color: #7f8c8d; margin-bottom: 30px; }
+
+        /* 버튼형 메뉴 그리드 */
+        .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
+        .menu-btn { 
+            background: #fff; border: 2px solid #e0e6ed; padding: 20px; border-radius: 15px; 
+            cursor: pointer; transition: all 0.3s ease; text-align: center; font-weight: bold; color: #34495e;
+        }
+        .menu-btn:hover { border-color: #3498db; background: #ebf5fb; transform: translateY(-3px); }
+        .menu-btn.active { border-color: #3498db; background: #3498db; color: white; }
+        .menu-btn i { display: block; font-size: 1.5rem; margin-bottom: 10px; }
+
+        /* 검색 입력창 */
+        .search-box { display: flex; gap: 10px; background: #f9f9f9; padding: 20px; border-radius: 15px; display: none; }
+        input { flex: 1; padding: 15px; border: 1px solid #ddd; border-radius: 10px; font-size: 1rem; }
+        .go-btn { background: #2ecc71; color: white; border: none; padding: 0 30px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+
+        /* 결과 영역 (초기 비어있음) */
+        #resultView { margin-top: 30px; border-top: 2px dashed #eee; padding-top: 20px; }
+        .empty-msg { text-align: center; color: #bdc3c7; padding: 40px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📰 사설 구조 탐색기</h1>
+    <p class="desc guide-text">검색하고 싶은 메뉴 단추를 먼저 눌러주세요!</p>
+
+    <div class="menu-grid">
+        <div class="menu-btn" onclick="selectMenu('all', this)">🔍 전체 텍스트</div>
+        <div class="menu-btn" onclick="selectMenu('author', this)">👤 작성자 이름</div>
+        <div class="menu-btn" onclick="selectMenu('structure', this)">🏗️ 사설 구조</div>
+        <div class="menu-btn" onclick="selectMenu('background', this)">🌍 배경 단어</div>
+        <div class="menu-btn" onclick="selectMenu('evidence', this)">🔗 에비던스 키워드</div>
+        <div class="menu-btn" onclick="selectMenu('fact', this)">📍 팩트(Fact)</div>
+    </div>
+
+    <div id="searchBox" class="search-box">
+        <input type="text" id="userInput" placeholder="검색어를 입력하세요...">
+        <button class="go-btn" onclick="performSearch()">찾기</button>
+    </div>
+
+    <div id="resultView">
+        <div class="empty-msg">아직 검색된 내용이 없습니다. 메뉴를 선택하고 검색해 보세요!</div>
+    </div>
+</div>
+
+<script>
+    let currentMode = '';
+
+    // 메뉴 단추를 눌렀을 때 실행되는 함수
+    function selectMenu(mode, element) {
+        currentMode = mode;
+        
+        // 모든 버튼 디자인 초기화
+        document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+        // 클릭한 버튼만 파란색으로 변경
+        element.classList.add('active');
+        
+        // 검색창 보이게 하기
+        const box = document.getElementById('searchBox');
+        box.style.display = 'flex';
+        
+        // 입력창 안내 메시지 변경
+        const input = document.getElementById('userInput');
+        const modeNames = {
+            all: '전체 내용', author: '작성자 이름', structure: '사설의 구조',
+            background: '배경 설명', evidence: '증거 키워드', fact: '팩트 내용'
+        };
+        input.placeholder = `[${modeNames[mode]}] 검색어를 입력하세요...`;
+        
+        // 결과창 초기화 (답이 나오지 않게 함)
+        document.getElementById('resultView').innerHTML = '<div class="empty-msg">검색어를 입력하고 [찾기] 버튼을 눌러주세요!</div>';
+    }
+
+    function performSearch() {
+        const val = document.getElementById('userInput').value;
+        if(!val) { alert('검색어를 입력해 주세요!'); return; }
+        
+        // 실제 데이터 검색 로직은 여기에 위치 (현재는 초기화면 기능에 집중)
+        document.getElementById('resultView').innerHTML = `
+            <div style="padding: 20px; background: #f8f9fa; border-radius: 10px; border-left: 5px solid #2ecc71;">
+                <strong>'${val}'</strong>에 대한 <strong>[${currentMode}]</strong> 검색 결과가 준비되었습니다.
+            </div>
+        `;
+    }
+</script>
+
+</body>
+</html>
